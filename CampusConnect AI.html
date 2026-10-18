@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CampusConnect AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef1f6;--surf:#fff;--ink:#14213d;--mute:#5b667d;--line:#d3d9e5;--blue:#2f5bea;--ok:#13875a;--warn:#c8431f;--floor:#e3e8f1;--room:#fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1424;--surf:#161e33;--ink:#e8ecf6;--mute:#97a2bb;--line:#2a3452;--blue:#7b9bff;--ok:#4fd39a;--warn:#ff8a65;--floor:#1b2440;--room:#222c4a}}
+:root[data-theme="dark"]{--bg:#0e1424;--surf:#161e33;--ink:#e8ecf6;--mute:#97a2bb;--line:#2a3452;--blue:#7b9bff;--ok:#4fd39a;--warn:#ff8a65;--floor:#1b2440;--room:#222c4a}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 "IBM Plex Sans",system-ui,sans-serif}
+h1,h2,h3{font-family:"Bricolage Grotesque",system-ui,sans-serif;line-height:1.08;margin:0;letter-spacing:-.02em}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+nav{display:flex;justify-content:space-between;align-items:center;padding:18px 0;gap:12px;flex-wrap:wrap}
+nav b{font:800 20px "Bricolage Grotesque",sans-serif}
+nav div a{margin-left:18px;text-decoration:none;color:var(--mute);font-weight:500}
+nav div a:hover{color:var(--ink)}
+.hero{display:grid;grid-template-columns:1fr 1.1fr;gap:36px;align-items:center;padding:28px 0 64px}
+h1{font-size:clamp(38px,6vw,64px);font-weight:800}
+.lede{color:var(--mute);max-width:46ch;margin:18px 0 24px;font-size:18px}
+.btn{display:inline-block;background:var(--ink);color:var(--bg);padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:600;border:0;cursor:pointer;font-size:16px}
+.btn.alt{background:transparent;color:var(--ink);border:1.5px solid var(--ink);margin-left:8px}
+.map{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:14px}
+.map svg{width:100%;height:auto;display:block}
+.room{fill:var(--room);stroke:var(--line);stroke-width:2}
+.room.on{stroke:var(--blue);stroke-width:3}
+.rl{font:600 11px "IBM Plex Sans";fill:var(--mute)}
+.dot{fill:var(--blue);transition:transform 1.6s cubic-bezier(.5,0,.2,1)}
+.ring{fill:none;stroke:var(--blue);stroke-width:2;transform-origin:center;transform-box:fill-box;animation:p 2s infinite}
+@keyframes p{from{transform:scale(1);opacity:.8}to{transform:scale(3);opacity:0}}
+.cap{display:flex;gap:10px;align-items:center;padding:10px 4px 2px;font-weight:500;min-height:48px}
+.badge{padding:3px 10px;border-radius:99px;font-size:13px;font-weight:600;white-space:nowrap}
+.ok{background:color-mix(in srgb,var(--ok) 18%,transparent);color:var(--ok)}
+.no{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}
+section{padding:56px 0;border-top:1px solid var(--line)}
+h2{font-size:clamp(28px,4vw,40px);margin-bottom:10px}
+.sub{color:var(--mute);max-width:60ch;margin:0 0 28px}
+.tabs{display:inline-flex;border:1.5px solid var(--ink);border-radius:10px;overflow:hidden;margin-bottom:24px}
+.tabs button{font:600 15px "IBM Plex Sans";padding:10px 18px;background:transparent;color:var(--ink);border:0;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--ink);color:var(--bg)}
+.portal{display:grid;grid-template-columns:320px 1fr;gap:36px;align-items:start}
+.phone{background:var(--surf);border:1px solid var(--line);border-radius:28px;padding:16px;box-shadow:0 0 0 8px var(--floor);min-height:480px}
+.phone h3{font-size:18px;margin-bottom:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:12px;background:var(--bg)}
+.card small{color:var(--mute);display:block}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.ringwrap{position:relative;width:84px;height:84px}
+.ringwrap svg{transform:rotate(-90deg)}
+.ringwrap span{position:absolute;inset:0;display:grid;place-items:center;font-weight:700}
+.hud{background:#0b1020;color:#fff;border-radius:14px;padding:22px;text-align:center}
+.hud .arrow{font-size:64px;color:#5af0a8;line-height:1;transition:transform .4s}
+.hud small{color:#98a3bd}
+.stu{display:flex;justify-content:space-between;align-items:center;padding:10px 4px;border-bottom:1px solid var(--line);gap:8px}
+.stu:last-child{border:0}
+.copy p{color:var(--mute);margin:0 0 12px}
+.copy ul{padding-left:20px;margin:0}
+.copy li{margin-bottom:6px}
+.arch{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch}
+.node{flex:1 1 170px;background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:16px}
+.node b{font-family:"Bricolage Grotesque";font-size:18px;display:block}
+.node span{color:var(--mute);font-size:14px}
+.sep{align-self:center;color:var(--mute);font-weight:700}
+.hw{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.hw div{border-left:4px solid var(--blue);padding:4px 0 4px 14px}
+.hw b{display:block;font-family:"Bricolage Grotesque";font-size:19px}
+.hw span{color:var(--mute)}
+.note{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:16px;margin-top:24px;color:var(--mute)}
+footer{padding:32px 0 48px;color:var(--mute);border-top:1px solid var(--line)}
+.tbl{overflow-x:auto}
+@media (max-width:860px){.hero,.portal{grid-template-columns:1fr}.phone{max-width:360px}.sep{display:none}}
+@media (prefers-reduced-motion:reduce){.ring{animation:none}.dot{transition:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav><b>CampusConnect AI</b><div><a href="#portals">Portals</a><a href="#how">How it works</a><a href="#hardware">Hardware</a></div></nav>
+
+<header class="hero">
+  <div>
+    <h1>Know where every class stands, and every student is.</h1>
+    <p class="lede">Cameras mark attendance, BLE beacons find students indoors, and three apps keep parents, teachers and students on the same page.</p>
+    <a class="btn" href="#portals">Try the portals</a><a class="btn alt" href="#how">See the system</a>
+  </div>
+  <div class="map" aria-label="Live campus map demo">
+    <svg viewBox="0 0 420 300" role="img" aria-label="Campus floor plan with a moving student marker">
+      <rect width="420" height="300" rx="10" fill="var(--floor)"/>
+      <rect id="z-gate" class="room" x="14" y="14" width="110" height="80" rx="6"/><text class="rl" x="24" y="34">Main gate</text>
+      <rect id="z-lab" class="room" x="150" y="14" width="150" height="110" rx="6"/><text class="rl" x="160" y="34">Block C · Room 302</text>
+      <rect id="z-cls" class="room" x="320" y="14" width="86" height="110" rx="6"/><text class="rl" x="328" y="34">Library</text>
+      <rect id="z-caf" class="room" x="14" y="190" width="170" height="96" rx="6"/><text class="rl" x="24" y="210">Cafeteria</text>
+      <rect id="z-hall" class="room" x="210" y="190" width="196" height="96" rx="6"/><text class="rl" x="220" y="210">Core Block 405</text>
+      <path d="M14 150h392" stroke="var(--line)" stroke-width="22" stroke-linecap="round"/>
+      <text class="rl" x="170" y="154">Corridor · beacon every 15–20 m</text>
+      <g id="mk" class="dot" style="transform:translate(70px,60px)"><circle class="ring" r="8"/><circle r="8" fill="var(--blue)"/></g>
+    </svg>
+    <div class="cap"><span id="capBadge" class="badge ok">In class</span><span id="capTxt">Rahul is in Block C · Room 302</span></div>
+  </div>
+</header>
+
+<section id="portals">
+  <h2>One app, three views</h2>
+  <p class="sub">Pick a role. Everything below is interactive and uses the same sample data as the prototype.</p>
+  <div class="tabs" role="tablist" aria-label="Portal role">
+    <button role="tab" aria-selected="true" data-r="parent">Parent</button>
+    <button role="tab" aria-selected="false" data-r="student">Student</button>
+    <button role="tab" aria-selected="false" data-r="teacher">Teacher</button>
+  </div>
+  <div class="portal">
+    <div class="phone" id="phone" aria-live="polite"></div>
+    <div class="copy" id="copy"></div>
+  </div>
+</section>
+
+<section id="how">
+  <h2>How it works</h2>
+  <p class="sub">Camera feeds are matched to registered faces, logged by the API, and shown in the app.</p>
+  <div class="arch">
+    <div class="node"><b>CCTV cameras</b><span>RTSP video, 1080p at 30 fps, at entry points</span></div><div class="sep">→</div>
+    <div class="node"><b>AI vision</b><span>OpenCV and YOLOv8 detect faces and build 512-value embeddings</span></div><div class="sep">→</div>
+    <div class="node"><b>FastAPI + PostgreSQL</b><span>Users, attendance logs and live zones</span></div><div class="sep">→</div>
+    <div class="node"><b>Flutter app</b><span>Parent, student and teacher screens over HTTPS and WSS</span></div>
+  </div>
+  <h3 style="margin:32px 0 10px;font-size:22px">Attendance log</h3>
+  <div class="tbl"><table style="width:100%;border-collapse:collapse;min-width:420px">
+    <thead><tr style="text-align:left;color:var(--mute)"><th>Column</th><th>Type</th><th>Purpose</th></tr></thead>
+    <tbody id="schema"></tbody></table></div>
+</section>
+
+<section id="hardware">
+  <h2>What you need on site</h2>
+  <p class="sub">A starting setup for a school or college campus.</p>
+  <div class="hw">
+    <div><b>Edge processor</b><span>NVIDIA Jetson Orin, or a server with an RTX 4060/4070, for 4–8 live camera feeds.</span></div>
+    <div><b>BLE beacons</b><span>Minew or Estimote, placed every 15–20 m along corridors.</span></div>
+    <div><b>Cameras</b><span>At least 2 MP at 30 fps, mounted at eye level at entry points, not on the ceiling.</span></div>
+  </div>
+  <p class="note">Face data and student location are sensitive. Before any real deployment, get consent from students and parents, limit who can see location, and follow your local data-protection rules.</p>
+</section>
+<footer>CampusConnect AI · prototype website</footer>
+</div>
+
+<script>
+(function(){
+var zones=[
+ {id:"z-lab",x:225,y:70,t:"Rahul is in Block C · Room 302",b:"In class",ok:1},
+ {id:"z-caf",x:100,y:240,t:"Rahul is in the Cafeteria during Data Structures",b:"Outside class zone",ok:0},
+ {id:"z-gate",x:70,y:55,t:"Rahul is at the main gate",b:"Arriving",ok:1},
+ {id:"z-hall",x:308,y:240,t:"Rahul is in Core Block 405",b:"In class",ok:1}
+];
+var i=0,mk=document.getElementById("mk"),bd=document.getElementById("capBadge"),tx=document.getElementById("capTxt");
+function show(){var z=zones[i];document.querySelectorAll(".room").forEach(function(r){r.classList.toggle("on",r.id===z.id)});
+mk.style.transform="translate("+z.x+"px,"+z.y+"px)";tx.textContent=z.t;bd.textContent=z.b;bd.className="badge "+(z.ok?"ok":"no")}
+show();setInterval(function(){i=(i+1)%zones.length;show()},3800);
+
+var phone=document.getElementById("phone"),copy=document.getElementById("copy");
+var steps=["Walk 15 meters forward, then turn left","Turn left at the stairwell","Take the stairs to level 4","Room 405 is on your right"];
+var arrows=["↑","←","⇡","→"],beacons=["BEACON_MAIN_B4","BEACON_STAIR_B7","BEACON_L4_B2","BEACON_405_B1"],si=0;
+var flags=[
+ {n:"Ananya Roy",s:"Present",src:"CCTV_Cam_01",m:1},
+ {n:"Vikram Singh",s:"Absent (on campus)",src:"Hallway_Beacon_04",m:0},
+ {n:"Zayan Khan",s:"Present",src:"CCTV_Cam_01",m:1},
+ {n:"Neha Patil",s:"Absent (off campus)",src:"Gate_RFID_02",m:0}
+],only=false;
+
+function parent(){var p=84.5,c=2*Math.PI*34,ok=p>=75;
+phone.innerHTML='<h3>Parent portal</h3><div class="card"><b>Rahul Sharma</b><small>Active on campus</small></div>'+
+'<div class="card"><small>Live location</small><b>Block C · Room 302 (Data Structures Lab)</b><small>Last synced: just now</small><div class="row" style="margin-top:8px"><span class="badge ok">Inside classroom zone</span></div></div>'+
+'<div class="card row"><div class="ringwrap"><svg width="84" height="84"><circle cx="42" cy="42" r="34" fill="none" stroke="var(--line)" stroke-width="8"/><circle cx="42" cy="42" r="34" fill="none" stroke="'+(ok?'var(--ok)':'var(--warn)')+'" stroke-width="8" stroke-dasharray="'+(c*p/100)+' '+c+'"/></svg><span>'+p+'%</span></div><div><b style="color:'+(ok?'var(--ok)':'var(--warn)')+'">'+(ok?'Meets the minimum':'Low attendance')+'</b><small>The university requires 75%.</small></div></div>';
+copy.innerHTML='<h3 style="font-size:26px;margin-bottom:12px">See your child’s day at a glance</h3><p>Parents get a live campus zone and a running attendance percentage, with a clear warning if it drops below the university minimum.</p><ul><li>Location is shown by zone, such as a room or block, not exact coordinates.</li><li>Status changes to a warning when the child leaves an authorised zone.</li><li>Attendance turns red under 75%.</li></ul>'}
+
+function student(){
+phone.innerHTML='<h3>Student navigation</h3><div class="card"><div class="row"><div><b>Advanced Machine Learning</b><small>10:30 AM · Core Block 405</small></div></div></div>'+
+'<div class="hud"><div class="arrow" id="ar">'+arrows[si]+'</div><p id="st" style="margin:10px 0 4px">'+steps[si]+'</p><small id="bc">Approaching beacon: '+beacons[si]+'</small></div>'+
+'<button class="btn" id="nx" style="width:100%;margin-top:12px">'+(si<steps.length-1?'Next step':'Start again')+'</button>';
+document.getElementById("nx").onclick=function(){si=(si+1)%steps.length;student()};
+copy.innerHTML='<h3 style="font-size:26px;margin-bottom:12px">Find your class indoors</h3><p>GPS does not work well inside buildings, so the app listens for BLE beacons placed along corridors and turns the signal into turn-by-turn directions.</p><ul><li>The next class and its room are pulled from the timetable.</li><li>Each step names the beacon the student is approaching.</li><li>Press Next step to walk through a sample route.</li></ul>'}
+
+function teacher(){var list=flags.filter(function(f){return !only||!f.m});
+phone.innerHTML='<h3>Live verification</h3><div class="row card"><b>CS-2B · Data Analytics</b><span class="badge ok">Cameras live</span></div><div>'+
+list.map(function(f){return '<div class="stu"><div><b>'+f.n+'</b><small style="color:var(--mute)">Seen by '+f.src+'</small></div><span class="badge '+(f.m?'ok':'no')+'">'+f.s+'</span></div>'}).join("")+'</div>'+
+'<button class="btn alt" id="fl" style="margin:12px 0 0;width:100%">'+(only?'Show everyone':'Show only absent students')+'</button>';
+document.getElementById("fl").onclick=function(){only=!only;teacher()};
+copy.innerHTML='<h3 style="font-size:26px;margin-bottom:12px">Absent or just elsewhere?</h3><p>The camera marks who is in the room. For anyone missing, the system checks beacons and gate scans to tell teachers whether the student is elsewhere on campus or has left.</p><ul><li>Green means the camera matched a registered face.</li><li>Red means no match, with the last place the student was detected.</li><li>Flagged students are listed so teachers can follow up after class.</li></ul>'}
+
+var views={parent:parent,student:student,teacher:teacher};
+document.querySelectorAll(".tabs button").forEach(function(b){b.onclick=function(){
+document.querySelectorAll(".tabs button").forEach(function(x){x.setAttribute("aria-selected",x===b)});views[b.dataset.r]()}});
+parent();
+
+var rows=[["id","SERIAL","Log ID"],["student_id","UUID","The student who was detected"],["class_id","VARCHAR(50)","Room or class"],["timestamp","TIMESTAMP","When the face was matched"],["status","VARCHAR(20)","present or flagged_absent"]];
+document.getElementById("schema").innerHTML=rows.map(function(r){return '<tr style="border-top:1px solid var(--line)"><td style="padding:8px 0"><code>'+r[0]+'</code></td><td>'+r[1]+'</td><td>'+r[2]+'</td></tr>'}).join("");
+})();
+</script>
+</body>
+</html>
